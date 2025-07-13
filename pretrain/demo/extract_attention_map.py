@@ -19,6 +19,9 @@ from PIL import Image
 import torch
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
+import custArch
+
+
 
 def main():
     parser = ArgumentParser()
@@ -45,6 +48,11 @@ def main():
         mmengine.mkdir_or_exist(args.output_root)
         output_file = os.path.join(args.output_root,
                                    os.path.basename(args.input))
+        
+    print("Config file:", args.config)
+    print("Checkpoint file:", args.checkpoint)
+    print("Model name from config:", mmengine.Config.fromfile(args.config).model.backbone.get('arch', 'Not found'))
+
 
     inferencer = FeatureExtractor(model=args.config, pretrained=args.checkpoint, device=args.device)
     inferencer.model.backbone.out_type = 'featmap' ## removes cls_token and returns spatial feature maps.
